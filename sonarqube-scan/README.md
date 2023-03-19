@@ -41,7 +41,7 @@ name: CI
 on: [push]
 jobs:
   install:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
         uses: karpov-kir/github-actions/cached-npm-ci@main
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: install
     steps:
       - name: Checkout
@@ -73,7 +73,7 @@ jobs:
         run: npm run test
 
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: test
     steps:
       - name: Checkout
