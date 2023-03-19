@@ -1,0 +1,76 @@
+name: SonarQube scan
+
+inputs:
+  sonar-token:
+    description: Access token for SonarQube
+    required: true
+  sonar-host-url:
+    description: SonarQube URL
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check PR
+      uses: 8BitJonny/gh-get-current-pr@2.2.0
+      id: checkPr
+      with:
+        filterOutClosed: true
+        sha: ${{ github.event.pull_request.head.sha }}
+
+    - name: Create sonar-project.properties
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+
+          const isPR = Boolean(${{ steps.PR.outputs.number }});
+          const branchName = isPR ? undefined : '${{ github.ref_name }}';
+
+          let config = {
+            'sonar.projectVersion': '${{ github.sha }}',
+            'sonar.pullrequest.key': '${{ steps.checkPr.outputs.number }}',
+            'sonar.pullrequest.branch': '${{ steps.checkPr.outputs.pr.head.ref }}',
+            'sonar.pullrequest.base': '${{ steps.checkPr.outputs.pr.base.ref }}',
+            'sonar.pullrequest.github.repository': '${{ github.repository }}',
+          };
+
+          // There must not be any `sonar.branch` properties like `sonar.branch.name` arguments set when you analyze a pull-request.
+          // These properties indicate to sonar that a branch is being analyzed rather than a pull-request so no pull-request decoration will be executed.
+          if (branchName) {
+            config['sonar.branch.name'] = branchName;
+          }
+
+          try {
+            const localConfig = require('./sonar-project.properties.js');
+            config = { ...config, ...localConfig };
+          } catch (err) {
+            console.log('Using default config because sonar-project.properties.js is not found');
+          }
+
+          console.log('SonarQube config:', config);
+
+          const lines = Object.entries(config)
+            .filter(([, v]) => v)
+            .map(([k, v]) => `${k}=${v}`)
+            .join('\n');
+
+          fs.writeFileSync('./sonar-project.properties', lines);
+
+    - name: SonarQube scan
+      uses: sonarsource/sonarqube-scan-action@v1.2.0
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+        SONAR_HOST_URL: ${{ inputs.sonar-host-url }}
+
+    # If you wish to fail / not fail your job when the Quality Gate is red, uncomment / comment the
+    # following lines.
+    - name: SonarQube quality gate
+      uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+        SONAR_HOST_URL: ${{ inputs.sonar-host-url }}
+
+    - name: Remove sonar-project.properties
+      run: rm sonar-project.properties
+      shell: bash
