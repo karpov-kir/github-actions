@@ -33,3 +33,63 @@ module.export = {
     sonar-token: ${{ secrets.SONAR_TOKEN }}
     sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
 ```
+
+## Full example
+
+```yml
+name: CI
+on: [push]
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install packages
+        uses: karpov-kir/github-actions/cached-npm-ci@main
+
+  test:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install packages
+        uses: karpov-kir/github-actions/cached-npm-ci@main
+
+      - name: Initialize coverage cache
+        uses: actions/cache@v3
+        with:
+          path: ./coverage
+          key: ${{ runner.os }}-coverage-${{ github.sha }}
+
+      - name: Test
+        run: npm run test
+
+  analyze:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Restore coverage cache
+        uses: actions/cache@v3
+        with:
+          path: ./coverage
+          key: ${{ runner.os }}-coverage-${{ github.sha }}
+
+      - name: SonarQube scan
+        uses: karpov-kir/github-actions/sonarqube-scan@main
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
+```
