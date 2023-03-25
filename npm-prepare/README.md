@@ -1,12 +1,12 @@
 # Overview
 
-Installs packages using `npm ci` and caches it. If the cache already exists it reuses the cache, which makes `npm ci` finish fast.
+Installs Node.js 19, restores NPM cache, installs packages using `npm ci`, stores NPM cache. Storing and restoring NPM cache allows `npm ci` finish faster when the action is reused across workflows.
 
 ## Usage
 
 ```yml
-- name: Install packages
-  uses: karpov-kir/github-actions/cached-npm-ci@main
+- name: Prepare NPM
+  uses: karpov-kir/github-actions/npm-prepare@main
 ```
 
 ## Full example
@@ -23,8 +23,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install packages
-        uses: karpov-kir/github-actions/cached-npm-ci@main
+      - name: Prepare NPM
+        uses: karpov-kir/github-actions/npm-prepare@main
 
   lint:
     runs-on: ubuntu-22.04
@@ -35,8 +35,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install packages
-        uses: karpov-kir/github-actions/cached-npm-ci@main
+      - name: Prepare NPM
+        uses: karpov-kir/github-actions/npm-prepare@main
 
       - name: Lint
         run: npm run lint
@@ -50,8 +50,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install packages
-        uses: karpov-kir/github-actions/cached-npm-ci@main
+      - name: Prepare NPM
+        uses: karpov-kir/github-actions/npm-prepare@main
 
       - name: Test
         run: npm run test

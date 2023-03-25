@@ -48,8 +48,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install packages
-        uses: karpov-kir/github-actions/cached-npm-ci@main
+      - name: Prepare NPM
+        uses: karpov-kir/github-actions/npm-prepare@main
 
   test:
     runs-on: ubuntu-22.04
@@ -60,8 +60,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install packages
-        uses: karpov-kir/github-actions/cached-npm-ci@main
+      - name: Prepare NPM
+        uses: karpov-kir/github-actions/npm-prepare@main
 
       - name: Initialize coverage cache
         uses: actions/cache@v3
