@@ -24,6 +24,7 @@ runs:
         script: |
           const fs = require('fs');
 
+          const localConfigPath = `${process.env.GITHUB_WORKSPACE}/sonar-project.properties.js`;
           const isPR = Boolean(${{ steps.PR.outputs.number }});
           const branchName = isPR ? undefined : '${{ github.ref_name }}';
 
@@ -42,10 +43,16 @@ runs:
           }
 
           try {
-            const localConfig = require('./sonar-project.properties.js');
-            config = { ...config, ...localConfig };
-          } catch (error) {
-            console.log(`Could not import sonar-project.properties.js: ${error}, a default configuration will be used`);
+            const requiredLocalConfig = require(localConfigPath);
+            config = { ...config, ...requiredLocalConfig };
+          } catch (requireError) {
+            console.log(`Could not require sonar-project.properties.js: ${requireError}, retrying using import`);
+            try {
+              const { default: importedLocalConfig } = await import(localConfigPath);
+              config = { ...config, ...importedLocalConfig };
+            } catch (importError) {
+              console.log(`Could not import sonar-project.properties.js: ${importError}, a default configuration will be used`);
+            }
           }
 
           console.log('SonarQube config:', config);
