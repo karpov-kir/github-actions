@@ -44,8 +44,8 @@ runs:
           try {
             const localConfig = require('./sonar-project.properties.js');
             config = { ...config, ...localConfig };
-          } catch (err) {
-            console.log('Using default config because sonar-project.properties.js is not found');
+          } catch (error) {
+            console.log(`Could not import sonar-project.properties.js: ${error}, a default configuration will be used`);
           }
 
           console.log('SonarQube config:', config);
