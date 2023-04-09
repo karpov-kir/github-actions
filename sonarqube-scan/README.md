@@ -45,8 +45,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Prepare NPM
         uses: karpov-kir/github-actions/npm-prepare@main
@@ -57,8 +55,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Prepare NPM
         uses: karpov-kir/github-actions/npm-prepare@main
@@ -78,8 +74,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Restore coverage cache
         uses: actions/cache@v3
