@@ -1,4 +1,4 @@
-# GitGub actions
+# GitHub actions
 
 A collection of reusable GitHub actions.
 
