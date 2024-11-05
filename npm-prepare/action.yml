@@ -1,4 +1,4 @@
-name: SonarQube scan
+name: NPM prepare
 
 runs:
   using: "composite"
