@@ -3,10 +3,10 @@ name: NPM prepare
 runs:
   using: "composite"
   steps:
-    - name: Install Node.js 19
+    - name: Install Node.js 22
       uses: actions/setup-node@v3
       with:
-        node-version: 19
+        node-version: 22
 
     - name: Initialize or restore NPM cache
       uses: actions/cache@v3

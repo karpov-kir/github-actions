@@ -1,6 +1,6 @@
 # Overview
 
-Installs Node.js 19, restores NPM cache, installs packages using `npm ci`, stores NPM cache. Storing and restoring NPM cache allows `npm ci` finish faster when the action is reused across workflows.
+Installs Node.js 22, restores NPM cache, installs packages using `npm ci`, stores NPM cache. Storing and restoring NPM cache allows `npm ci` finish faster when the action is reused across workflows.
 
 ## Usage
 
