@@ -24,7 +24,16 @@ runs:
         script: |
           const fs = require('fs');
 
-          const localConfigPath = `${process.env.GITHUB_WORKSPACE}/sonar-project.properties.js`;
+          // It must be an absolute path to support ESM import (https://github.com/actions/github-script?tab=readme-ov-file#use-esm-import).
+          const localConfigPath = `${process.env.GITHUB_WORKSPACE}/sonar-project.properties.mjs`;
+
+          if (!fs.existsSync(localConfigPath)) {
+            console.log(`No sonar-project.properties.mjs found (checked using path ${localConfigPath})`);
+            return;
+          } else {
+            console.log(`Found sonar-project.properties.mjs at ${localConfigPath}`);
+          }
+
           const isPR = Boolean(${{ steps.PR.outputs.number }});
           const branchName = isPR ? undefined : '${{ github.ref_name }}';
 
@@ -43,16 +52,11 @@ runs:
           }
 
           try {
-            const requiredLocalConfig = require(localConfigPath);
-            config = { ...config, ...requiredLocalConfig };
-          } catch (requireError) {
-            console.log(`Could not require sonar-project.properties.js: ${requireError}, retrying using import`);
-            try {
-              const { default: importedLocalConfig } = await import(localConfigPath);
-              config = { ...config, ...importedLocalConfig };
-            } catch (importError) {
-              console.log(`Could not import sonar-project.properties.js: ${importError}, a default configuration will be used`);
-            }
+            const { default: importedLocalConfig } = await import(localConfigPath);
+            config = { ...config, ...importedLocalConfig };
+          } catch (importError) {
+            console.error(importError);
+            console.log(`Could not import sonar-project.properties.mjs; a default configuration will be used`);
           }
 
           console.log('SonarQube config:', config);
