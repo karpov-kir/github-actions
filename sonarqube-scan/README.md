@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Prepare NPM
         uses: karpov-kir/github-actions/npm-prepare@main
@@ -54,13 +54,13 @@ jobs:
     needs: install
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Prepare NPM
         uses: karpov-kir/github-actions/npm-prepare@main
 
       - name: Initialize coverage cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./coverage
           key: ${{ runner.os }}-coverage-${{ github.sha }}
@@ -73,10 +73,10 @@ jobs:
     needs: test
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore coverage cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./coverage
           key: ${{ runner.os }}-coverage-${{ github.sha }}
