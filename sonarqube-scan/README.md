@@ -41,7 +41,7 @@ name: CI
 on: [push]
 jobs:
   install:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         uses: karpov-kir/github-actions/npm-prepare@main
 
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: install
     steps:
       - name: Checkout
@@ -69,7 +69,7 @@ jobs:
         run: npm run test
 
   analyze:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: test
     steps:
       - name: Checkout
