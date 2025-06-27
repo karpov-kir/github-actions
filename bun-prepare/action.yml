@@ -1,0 +1,24 @@
+name: Bun prepare
+
+inputs:
+  bun-version:
+    description: Bun version to use
+    default: 1.2.17
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Bun ${{ inputs.bun-version }}
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: ${{ inputs.bun-version }}
+
+    - name: Initialize or restore Bun cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.bun/install/cache
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/bun.lock') }}
+
+    - name: Install packages
+      run: bun install
+      shell: bash
