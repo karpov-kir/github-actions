@@ -1,12 +1,14 @@
 # Overview
 
-Installs Node.js 22, restores NPM cache, installs packages using `npm ci`, stores NPM cache. Storing and restoring NPM cache allows `npm ci` finish faster when the action is reused across workflows.
+Installs Node.js, restores the NPM cache, installs dependencies using `npm ci`, and saves the updated cache. Caching accelerates `npm ci` by reusing previously downloaded packages when the action is run across workflows.
 
 ## Usage
 
 ```yml
 - name: Prepare NPM
   uses: karpov-kir/github-actions/npm-prepare@main
+  with:
+    node-version: 24 # Optional, default is 24
 ```
 
 ## Full example
