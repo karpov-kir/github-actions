@@ -69,7 +69,7 @@ runs:
           fs.writeFileSync('./sonar-project.properties', lines);
 
     - name: SonarQube scan
-      uses: sonarsource/sonarqube-scan-action@v3.1
+      uses: sonarsource/sonarqube-scan-action@v5.2
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
         SONAR_HOST_URL: ${{ inputs.sonar-host-url }}
@@ -77,7 +77,7 @@ runs:
     # If you wish to fail / not fail your job when the Quality Gate is red, uncomment / comment the
     # following lines.
     - name: SonarQube quality gate
-      uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
+      uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
         SONAR_HOST_URL: ${{ inputs.sonar-host-url }}

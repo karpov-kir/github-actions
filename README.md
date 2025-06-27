@@ -6,3 +6,4 @@ A collection of reusable GitHub actions.
 
 - [SonarQube scan](/sonarqube-scan)
 - [Cached npm ci](/npm-prepare)
+- [Cached bun install](/npm-prepare)
